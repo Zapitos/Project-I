@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://c6vl4ma8l3rv3" path="res://inimigo 2/enemy_2.tscn" id="8_hfh42"]
 [ext_resource type="Script" path="res://script/spikes_area.gd" id="11_t1jqc"]
 [ext_resource type="PackedScene" uid="uid://bd2vwtqil5hdt" path="res://prefabs/checkpoint.tscn" id="12_t1jqc"]
-[ext_resource type="AudioStream" uid="uid://doldtymekef6v" path="res://sounds/bg_music.wav" id="14_dyj7e"]
+[ext_resource type="AudioStream" path="" id="14_dyj7e"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_emy1y"]
 texture = ExtResource("1_pqwhu")
@@ -541,9 +541,7 @@ position = Vector2(912, -337)
 scale = Vector2(2, 2)
 
 [node name="bg_music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("14_dyj7e")
-volume_db = -5.462
-autoplay = true
+autoplay = false
 
 [node name="enemy 2" parent="." instance=ExtResource("8_hfh42")]
 position = Vector2(227, -389)
