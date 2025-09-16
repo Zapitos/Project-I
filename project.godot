@@ -11,15 +11,15 @@ config_version=5
 [application]
 
 config/name="projeto icaro"
-run/main_scene="res://estagiotestes/test_level.tscn"
+run/main_scene="res://cenas/niveis/test_level.tscn"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
-EventController="*res://script/event_controller.gd"
-GameController="*res://script/game_controller.gd"
-Globals="*res://singletons/globals.gd"
+EventController="*res://scripts/event_controller.gd"
+GameController="*res://scripts/game_controller.gd"
+Globals="*res://globais/globals.gd"
 
 [display]
 
