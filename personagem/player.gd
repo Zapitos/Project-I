@@ -13,6 +13,8 @@ class_name player extends CharacterBody2D
 @onready var ray_left: RayCast2D = $ray_left
 @onready var ray_right: RayCast2D = $ray_right
 
+@onready var attack_hitbox_container = $attack_hitbox_container
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var has_double_jumped : bool = false
@@ -20,12 +22,14 @@ var animation_locked : bool = false
 var direction : Vector2 = Vector2.ZERO
 var was_in_air : bool = false
 var _suppress_horizontal_this_frame: bool = false
+var is_facing_right = true
 
 signal player_has_died()
 
 var knockback_vector := Vector2.ZERO
 
-
+var collision_shapes: Array[CollisionShape2D]
+var current_animation = ""
 
 
 func _physics_process(delta: float):
@@ -116,12 +120,18 @@ func update_animation():
 				animated_sprite.play("run")
 			else:
 				animated_sprite.play("idle")
+	if Input.is_action_just_pressed("attack"):
+		attack()
 
 func update_facing_direction():
 	if direction.x > 0:
 		animated_sprite.flip_h = false
+		attack_hitbox_container.scale.x = 1
+		is_facing_right = true
 	elif direction.x < 0:
 		animated_sprite.flip_h = true
+		attack_hitbox_container.scale.x = -1
+		is_facing_right = false
 
 func jump():
 	velocity.y = jump_velocity
@@ -148,13 +158,41 @@ func wall_jump(push_dir: int) -> void:
 	#animation_locked = true
 
 func _on_animated_sprite_2d_animation_finished():
-	if(["jump_end", "jump_start", "jump_double"].has(animated_sprite.animation)):
+	if(["jump_end", "jump_start", "jump_double", "attack"].has(animated_sprite.animation)):
 		animation_locked = false
 
 var hearts_list : Array[TextureRect]
 var health = 5
 
+func attack():
+	animated_sprite.play("attack")
+	animation_locked = true
 
+func _ready():
+	for i in range(animated_sprite.sprite_frames.get_frame_count("attack")):
+		var shape_node = attack_hitbox_container.get_node("attack_hitbox" + str(i))
+		if shape_node:
+			collision_shapes.append(shape_node)
+			shape_node.disabled = true
+	
+	animated_sprite.frame_changed.connect(_on_frame_changed)
+	animated_sprite.animation_changed.connect(_on_animation_changed)
+	
+	attack_hitbox_container.scale.x = 1 if is_facing_right else -1
+
+func _on_animation_changed():
+	current_animation = animated_sprite.animation
+
+func _on_frame_changed():
+	if current_animation == "attack":
+		var current_frame = animated_sprite.frame
+		for shape in collision_shapes:
+			shape.disabled = true
+		if current_frame < collision_shapes.size():
+			collision_shapes[current_frame].disabled = false
+	else:
+		for shape in collision_shapes:
+			shape.disabled = true
 
 func follow_camera(camera):
 	var camera_path = camera.get_path()

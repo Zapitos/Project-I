@@ -1,9 +1,23 @@
-[gd_scene load_steps=27 format=3 uid="uid://xxaoff7gwbrm"]
+[gd_scene load_steps=29 format=3 uid="uid://xxaoff7gwbrm"]
 
-[ext_resource type="Script" path="res://personagem/player.gd" id="1_flj5s"]
+[ext_resource type="Script" uid="uid://cq211xeu41o8m" path="res://personagem/player.gd" id="1_flj5s"]
 [ext_resource type="Texture2D" uid="uid://b0g1y72ifokn2" path="res://sprites/novasanims/idle.png" id="2_cpxa8"]
+[ext_resource type="Texture2D" uid="uid://dtdcjeuee7101" path="res://sprites/novasanims/attack.png" id="2_jv6l4"]
 [ext_resource type="Texture2D" uid="uid://cips32m8gcx84" path="res://sprites/novasanims/jump.png" id="4_arcd1"]
 [ext_resource type="Texture2D" uid="uid://38enqu3m7jje" path="res://sprites/novasanims/walk.png" id="4_wsk0a"]
+[ext_resource type="PackedScene" uid="uid://bho83iyp1dh4w" path="res://personagem/attack_hitbox_container.tscn" id="6_061al"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_061al"]
+atlas = ExtResource("2_jv6l4")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ar424"]
+atlas = ExtResource("2_jv6l4")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yfrqe"]
+atlas = ExtResource("2_jv6l4")
+region = Rect2(96, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8btq7"]
 atlas = ExtResource("2_cpxa8")
@@ -29,10 +43,6 @@ region = Rect2(48, 0, 48, 48)
 atlas = ExtResource("4_arcd1")
 region = Rect2(96, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_q1jg6"]
-atlas = ExtResource("4_arcd1")
-region = Rect2(144, 0, 48, 48)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_nj0rf"]
 atlas = ExtResource("4_arcd1")
 region = Rect2(0, 0, 48, 48)
@@ -45,10 +55,6 @@ region = Rect2(48, 0, 48, 48)
 atlas = ExtResource("4_arcd1")
 region = Rect2(96, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_88nh3"]
-atlas = ExtResource("4_arcd1")
-region = Rect2(144, 0, 48, 48)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_xdr3s"]
 atlas = ExtResource("4_arcd1")
 region = Rect2(0, 0, 48, 48)
@@ -60,10 +66,6 @@ region = Rect2(48, 0, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_08l2k"]
 atlas = ExtResource("4_arcd1")
 region = Rect2(96, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_uqnwr"]
-atlas = ExtResource("4_arcd1")
-region = Rect2(144, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dpi7t"]
 atlas = ExtResource("4_wsk0a")
@@ -83,6 +85,20 @@ region = Rect2(144, 0, 48, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_q1ej8"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_061al")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ar424")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yfrqe")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_8btq7")
@@ -106,9 +122,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_e3fmm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_q1jg6")
 }],
 "loop": false,
 "name": &"jump_double",
@@ -128,9 +141,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_dqyxi")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_88nh3")
 }],
 "loop": true,
 "name": &"jump_loop",
@@ -145,9 +155,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_08l2k")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_uqnwr")
 }],
 "loop": false,
 "name": &"jump_start",
@@ -172,8 +179,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ry2ya"]
-radius = 8.0
-height = 42.0
+radius = 11.912798
+height = 46.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n5c32"]
 size = Vector2(16.4011, 48.1748)
@@ -186,12 +193,12 @@ script = ExtResource("1_flj5s")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-32, -40)
 sprite_frames = SubResource("SpriteFrames_q1ej8")
-animation = &"jump_start"
+animation = &"idle"
 autoplay = "idle"
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-5, -13)
+position = Vector2(-9.999999, -15)
 scale = Vector2(1.00732, 1)
 shape = SubResource("CapsuleShape2D_ry2ya")
 
@@ -221,11 +228,14 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="Collision" type="CollisionShape2D" parent="hurtbox"]
-position = Vector2(-4.20057, -11.9126)
+position = Vector2(-6.7642603, -12.174792)
 shape = SubResource("RectangleShape2D_n5c32")
 debug_color = Color(0.849027, 2.35841e-06, 0.44653, 0.42)
 
 [node name="remote" type="RemoteTransform2D" parent="."]
+
+[node name="attack_hitbox_container" parent="." instance=ExtResource("6_061al")]
+position = Vector2(-8, -33)
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]
