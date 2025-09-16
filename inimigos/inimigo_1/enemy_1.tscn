@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://e647ucp8nn1x"]
 
 [ext_resource type="Texture2D" uid="uid://bnpcjvluwnpq2" path="res://sprites/enemy.png" id="1_6uw6l"]
-[ext_resource type="Script" path="res://inimigo 1/enemy_1.gd" id="1_tkeok"]
-[ext_resource type="PackedScene" uid="uid://cn6idgql3tfxp" path="res://prefabs/hitbox.tscn" id="3_36fbc"]
+[ext_resource type="Script" path="res://inimigos/inimigo_1/enemy_1.gd" id="1_tkeok"]
+[ext_resource type="PackedScene" uid="uid://cn6idgql3tfxp" path="res://prefabricados/hitbox.tscn" id="3_36fbc"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_scfs0"]
 radius = 5.0

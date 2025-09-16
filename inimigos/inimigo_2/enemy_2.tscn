@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c6vl4ma8l3rv3"]
 
 [ext_resource type="Texture2D" uid="uid://dfsd7y1u6nwvn" path="res://sprites/enemy 2.png" id="1_f7l8a"]
-[ext_resource type="Script" path="res://inimigo 2/enemy_2.gd" id="1_u3oph"]
+[ext_resource type="Script" path="res://inimigos/inimigo_2/enemy_2.gd" id="1_u3oph"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u3oph"]
 
