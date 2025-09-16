@@ -1,0 +1,8 @@
+# Godot 4.x
+.godot/
+.import/
+# Export builds
+export/*
+# OS
+Thumbs.db
+.DS_Store
