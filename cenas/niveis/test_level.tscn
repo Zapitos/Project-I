@@ -389,7 +389,7 @@ offset_bottom = 0.0
 size_flags_vertical = 0
 
 [node name="player" parent="." instance=ExtResource("2_1jb2b")]
-position = Vector2(341, -352)
+position = Vector2(1034, 75)
 collision_layer = 1
 collision_mask = 6
 

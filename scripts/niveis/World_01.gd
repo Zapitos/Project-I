@@ -8,7 +8,7 @@ extends Node2D
 func _ready() -> void:
 	player_node.follow_camera(camera)
 	player_node.player_has_died.connect(reload_game)
-	Globals.player_life = 1
+	Globals.player_life = 2
 
 func reload_game():
 	await get_tree().create_timer(1.0).timeout
