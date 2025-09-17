@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://ci43sj7crdrk6"]
+
+[ext_resource type="Texture2D" uid="uid://pkt780x48hiu" path="res://sprites/boss_sprites/b_spike.png" id="1_0fmcy"]
+[ext_resource type="Script" uid="uid://bhuhiy8k3hg3l" path="res://scripts/bespinhos.gd" id="1_a7kf0"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a7kf0"]
+radius = 8.0
+height = 18.0
+
+[node name="Bespinhos" type="RigidBody2D"]
+collision_layer = 8
+collision_mask = 5
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("1_a7kf0")
+
+[node name="collision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("CapsuleShape2D_a7kf0")
+
+[node name="sprite" type="Sprite2D" parent="."]
+position = Vector2(-1, -10)
+scale = Vector2(0.1875, 0.1875)
+texture = ExtResource("1_0fmcy")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

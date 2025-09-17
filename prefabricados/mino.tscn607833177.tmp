@@ -1,0 +1,87 @@
+[gd_scene load_steps=7 format=3 uid="uid://cqcb7iuil745v"]
+
+[ext_resource type="Script" uid="uid://cthxvduq7j1nr" path="res://scripts/mino.gd" id="1_1cgx4"]
+[ext_resource type="Texture2D" uid="uid://cfkb8jd4lwpug" path="res://sprites/boss_sprites/IDLE.png" id="1_k55io"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k55io"]
+size = Vector2(35, 36)
+
+[sub_resource type="Animation" id="Animation_1cgx4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("textura:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_k55io"]
+resource_name = "moving"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("textura:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nk08q"]
+_data = {
+&"RESET": SubResource("Animation_1cgx4"),
+&"moving": SubResource("Animation_k55io")
+}
+
+[node name="mino" type="CharacterBody2D"]
+scale = Vector2(1.71116, 1.71116)
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_1cgx4")
+
+[node name="collision" type="CollisionShape2D" parent="."]
+position = Vector2(-8, 8)
+scale = Vector2(0.804878, 0.90625)
+shape = SubResource("RectangleShape2D_k55io")
+
+[node name="textura" type="Sprite2D" parent="."]
+texture = ExtResource("1_k55io")
+hframes = 4
+
+[node name="fire_point" type="Marker2D" parent="textura"]
+position = Vector2(-8, 10)
+
+[node name="Bespinhos_point" type="Marker2D" parent="textura"]
+position = Vector2(-11, 22)
+
+[node name="anim_player" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_nk08q")
+}
+
+[node name="anim_tree" type="AnimationTree" parent="."]
+
+[node name="bomb_cooldown" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="fire_cooldown" type="Timer" parent="."]
+
+[node name="wall_detector" type="RayCast2D" parent="."]
+position = Vector2(-12.8568, 9.93478)
+scale = Vector2(1.93654, 2.80426)
+target_position = Vector2(-16, 0)
+collision_mask = 4
+
+[connection signal="timeout" from="bomb_cooldown" to="." method="_on_bomb_cooldown_timeout"]

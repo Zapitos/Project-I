@@ -13,7 +13,9 @@ class_name player extends CharacterBody2D
 @onready var ray_left: RayCast2D = $ray_left
 @onready var ray_right: RayCast2D = $ray_right
 
-@onready var attack_hitbox_container = $attack_hitbox_container
+@onready var jump_sfx: AudioStreamPlayer = $jump_sfx
+
+var wall_jumps_left : int = 2 # Variável para controlar os pulos na parede
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -23,6 +25,15 @@ var direction : Vector2 = Vector2.ZERO
 var was_in_air : bool = false
 var _suppress_horizontal_this_frame: bool = false
 var is_facing_right = true
+
+@export var dash_speed: float = 400.0 # Velocidade do dash
+@export var run_speed: float = 300.0   # Velocidade da corrida
+var is_dashing: bool = false
+var is_running: bool = false
+@export var run_start_impulse: float = 500.0 # O quão rápido o personagem começa a correr
+@export var run_impulse_duration: float = 0.1 # O tempo do impulso inicial em segundos
+var is_impulsing: bool = false
+var can_dash: bool = true
 
 signal player_has_died()
 
@@ -40,7 +51,7 @@ func _physics_process(delta: float):
 		was_in_air = true
 	else:
 		has_double_jumped = false
-
+		wall_jumps_left = 2
 		#if was_in_air == true:
 			#land()
 			#
@@ -61,10 +72,10 @@ func _physics_process(delta: float):
 
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
-			# Normal jump from floor
 			jump()
-		elif on_wall:
-			# Wall jump: impulsiona para o lado oposto da parede
+			# Reset the wall jump counter on the ground
+			wall_jumps_left = 1 # Note: você tinha 1, mudei para 2 para permitir dois pulos de parede
+		elif on_wall and wall_jumps_left > 0:
 			var push_dir := 0
 			if touching_left:
 				push_dir = 1
@@ -75,25 +86,43 @@ func _physics_process(delta: float):
 			elif direction.x > 0:
 				push_dir = -1
 			else:
-				push_dir = 1 # default para a direita
+				push_dir = 1
 			wall_jump(push_dir)
 			_suppress_horizontal_this_frame = true
+			wall_jumps_left -= 1
 		elif not has_double_jumped:
-			# Double jump in air
 			double_jump()
 
 
+	var input_x = Input.get_axis("left", "right")
 
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	direction = Input.get_vector("left", "right", "up", "down")
+	if Input.is_action_just_pressed("attack"):
+		dash()
+		# Reset the run impulse if a dash is performed
+		is_impulsing = false
+		
+	# Verifica se o botão de corrida foi pressionado pela primeira vez
+	if Input.is_action_just_pressed("run"):
+		is_impulsing = true
+		# Inicia um timer para o impulso
+		await get_tree().create_timer(run_impulse_duration).timeout
+		is_impulsing = false
+	
+	is_running = Input.is_action_pressed("run")
 
 	if not _suppress_horizontal_this_frame:
-		if direction.x != 0 && animated_sprite.animation != "jump_end":
-			velocity.x = direction.x * speed
+		if is_dashing:
+			velocity.x = move_toward(velocity.x, 0, dash_speed * 1.5)
+		elif is_impulsing:
+			# Aplica a velocidade de impulso inicial
+			velocity.x = input_x * run_start_impulse
+		elif is_running:
+			velocity.x = input_x * run_speed
 		else:
+			velocity.x = input_x * speed
+		
+		if input_x == 0 && !is_dashing && !is_running:
 			velocity.x = move_toward(velocity.x, 0, speed)
-
 
 	# Wall slide (limita velocidade de queda quando encostado e segurando direção para a parede)
 	if on_wall and direction.x != 0:
@@ -116,33 +145,40 @@ func update_animation():
 		if not is_on_floor():
 			animated_sprite.play("jump_loop")
 		else:
-			if direction.x != 0:
+			if is_dashing:
+				# Use a animação de corrida para o dash
+				animated_sprite.play("run")
+			elif is_running:
+				# Animação de corrida
+				animated_sprite.play("run")
+			elif Input.get_axis("left", "right") != 0:
+				# Animação de corrida para o movimento normal
 				animated_sprite.play("run")
 			else:
+				# Animação de parado
 				animated_sprite.play("idle")
 	if Input.is_action_just_pressed("attack"):
 		attack()
 
 func update_facing_direction():
-	if direction.x > 0:
+	var input_x = Input.get_axis("left", "right")
+	if input_x > 0:
 		animated_sprite.flip_h = false
-		attack_hitbox_container.scale.x = 1
-		is_facing_right = true
-	elif direction.x < 0:
+	elif input_x < 0:
 		animated_sprite.flip_h = true
-		attack_hitbox_container.scale.x = -1
-		is_facing_right = false
 
 func jump():
 	velocity.y = jump_velocity
 	animated_sprite.play("jump_start")
 	animation_locked = true
+	jump_sfx.play()
 
 func double_jump():
 	velocity.y = double_jump_velocity
 	animated_sprite.play("jump_double")
 	animation_locked = true
 	has_double_jumped = true
+	jump_sfx.play()
 
 func wall_jump(push_dir: int) -> void:
 	# Empurra o jogador para longe da parede e aplica impulso vertical
@@ -152,10 +188,27 @@ func wall_jump(push_dir: int) -> void:
 	animation_locked = true
 	# Após um wall jump, permitimos que o jogador ainda faça um double jump depois
 	has_double_jumped = false
+	jump_sfx.play()
 
 #func land():
 	#animated_sprite.play("jump_end")
 	#animation_locked = true
+	
+func dash():
+	can_dash = false
+	is_dashing = true
+	
+	# Aplica o impulso de velocidade
+	var dash_direction = 1 if is_facing_right else -1
+	velocity.x = dash_direction * dash_speed
+	
+	# Duração do dash
+	await get_tree().create_timer(0.2).timeout
+	is_dashing = false
+	
+	# Cooldown para poder usar o dash novamente (ajuste este valor como quiser)
+	await get_tree().create_timer(0.5).timeout
+	can_dash = true
 
 func _on_animated_sprite_2d_animation_finished():
 	if(["jump_end", "jump_start", "jump_double", "attack"].has(animated_sprite.animation)):
@@ -168,31 +221,8 @@ func attack():
 	animated_sprite.play("attack")
 	animation_locked = true
 
-func _ready():
-	for i in range(animated_sprite.sprite_frames.get_frame_count("attack")):
-		var shape_node = attack_hitbox_container.get_node("attack_hitbox" + str(i))
-		if shape_node:
-			collision_shapes.append(shape_node)
-			shape_node.disabled = true
-	
-	animated_sprite.frame_changed.connect(_on_frame_changed)
-	animated_sprite.animation_changed.connect(_on_animation_changed)
-	
-	attack_hitbox_container.scale.x = 1 if is_facing_right else -1
-
 func _on_animation_changed():
 	current_animation = animated_sprite.animation
-
-func _on_frame_changed():
-	if current_animation == "attack":
-		var current_frame = animated_sprite.frame
-		for shape in collision_shapes:
-			shape.disabled = true
-		if current_frame < collision_shapes.size():
-			collision_shapes[current_frame].disabled = false
-	else:
-		for shape in collision_shapes:
-			shape.disabled = true
 
 func follow_camera(camera):
 	var camera_path = camera.get_path()
