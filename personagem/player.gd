@@ -241,7 +241,7 @@ func _on_hurtbox_body_entered(_body: Node2D) -> void:
 
 func take_damage(knockback_force := Vector2.ZERO, duration:= 0.25):
 
-	if Globals.player_life > 0:
+	if Globals.player_life > 1:
 		Globals.player_life -= 1
 	else:
 		queue_free()
