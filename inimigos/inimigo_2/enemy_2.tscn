@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c6vl4ma8l3rv3"]
 
 [ext_resource type="Texture2D" uid="uid://dfsd7y1u6nwvn" path="res://sprites/enemy 2.png" id="1_f7l8a"]
-[ext_resource type="Script" path="res://inimigos/inimigo_2/enemy_2.gd" id="1_u3oph"]
+[ext_resource type="Script" uid="uid://bem7w566smcki" path="res://inimigos/inimigo_2/enemy_2.gd" id="1_u3oph"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u3oph"]
 
@@ -110,8 +110,8 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8i8ls"]
 _data = {
-"RESET": SubResource("Animation_vkf05"),
-"fly": SubResource("Animation_k6wto")
+&"RESET": SubResource("Animation_vkf05"),
+&"fly": SubResource("Animation_k6wto")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_k6wto"]
@@ -133,7 +133,7 @@ hframes = 3
 
 [node name="animation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_8i8ls")
+&"": SubResource("AnimationLibrary_8i8ls")
 }
 autoplay = "fly"
 
@@ -148,4 +148,4 @@ shape = SubResource("CircleShape2D_k6wto")
 
 [node name="wall_detector" type="RayCast2D" parent="."]
 target_position = Vector2(13, 0)
-collision_mask = 3
+collision_mask = 4

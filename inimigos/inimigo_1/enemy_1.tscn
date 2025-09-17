@@ -1,7 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://e647ucp8nn1x"]
+[gd_scene load_steps=11 format=3 uid="uid://e647ucp8nn1x"]
 
 [ext_resource type="Texture2D" uid="uid://bnpcjvluwnpq2" path="res://sprites/enemy.png" id="1_6uw6l"]
-[ext_resource type="Script" path="res://inimigos/inimigo_1/enemy_1.gd" id="1_tkeok"]
+[ext_resource type="Script" uid="uid://c05ppipy0njk0" path="res://inimigos/inimigo_1/enemy_1.gd" id="1_tkeok"]
 [ext_resource type="PackedScene" uid="uid://cn6idgql3tfxp" path="res://prefabricados/hitbox.tscn" id="3_36fbc"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_scfs0"]
@@ -142,13 +142,16 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_srvph"]
 _data = {
-"RESET": SubResource("Animation_tkeok"),
-"standing": SubResource("Animation_srvph"),
-"walk": SubResource("Animation_6uw6l")
+&"RESET": SubResource("Animation_tkeok"),
+&"standing": SubResource("Animation_srvph"),
+&"walk": SubResource("Animation_6uw6l")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vtfbb"]
 size = Vector2(13, 25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bodnb"]
+size = Vector2(16.4011, 48.1748)
 
 [node name="enemy 1" type="CharacterBody2D"]
 collision_layer = 2
@@ -166,7 +169,7 @@ hframes = 3
 
 [node name="animation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_srvph")
+&"": SubResource("AnimationLibrary_srvph")
 }
 autoplay = "walk"
 speed_scale = 1.5
@@ -188,3 +191,14 @@ light_mask = 5
 visibility_layer = 5
 position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_vtfbb")
+
+[node name="hurtbox" type="Area2D" parent="."]
+position = Vector2(7, 7)
+scale = Vector2(1.54605, 0.593661)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Collision" type="CollisionShape2D" parent="hurtbox"]
+position = Vector2(-4.20057, -11.9126)
+shape = SubResource("RectangleShape2D_bodnb")
+debug_color = Color(0.849027, 2.35841e-06, 0.44653, 0.42)
