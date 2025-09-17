@@ -2,7 +2,7 @@ extends CharacterBody2D  # Verifique se seu nó é desse tipo!
 
 const BESPINHOS := preload("res://prefabricados/bespinhos.tscn")
 const FIRE := preload("res://prefabricados/fire.tscn")
-const SPEED = 15000.0
+const SPEED = 17000.0
 var direction = -1
 @onready var wall_detector: RayCast2D = $wall_detector
 @onready var textura: Sprite2D = $textura

@@ -71,6 +71,7 @@ position = Vector2(-11, 22)
 libraries = {
 &"": SubResource("AnimationLibrary_nk08q")
 }
+autoplay = "moving"
 
 [node name="anim_tree" type="AnimationTree" parent="."]
 
