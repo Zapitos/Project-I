@@ -10,7 +10,7 @@ func _ready() -> void:
 	start_btn.grab_focus()
 
 func _on_start_btn_pressed() -> void:
-	get_tree().change_scene_to_file("res://cenas/niveis/test_level.tscn")
+	get_tree().change_scene_to_file("res://estagiotestes/test_level.tscn")
 
 
 func _on_credits_btn_pressed() -> void:

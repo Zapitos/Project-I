@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://ejes7yxh6hiq"]
 
 [ext_resource type="Script" uid="uid://be01c3hvcb6n8" path="res://scripts/title_screen.gd" id="1_e2uq4"]
-[ext_resource type="Texture2D" uid="uid://djuhsgpb5ksby" path="res://sprites/title-screen.jpg" id="1_o8kj8"]
+[ext_resource type="Texture2D" uid="uid://bnmj2f13c532c" path="res://sprites/title-screen.jpg" id="2_e2uq4"]
 [ext_resource type="Texture2D" uid="uid://d0jjdxvolos74" path="res://sprites/game_logo.jpg" id="2_miun2"]
 [ext_resource type="AudioStream" uid="uid://dmhwlgf22j245" path="res://sons/tilescren_sfx.mp3" id="3_7l4cn"]
 
@@ -80,11 +80,11 @@ grow_vertical = 2
 script = ExtResource("1_e2uq4")
 
 [node name="bg" type="TextureRect" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
 scale = Vector2(0.844078, 0.844078)
-texture = ExtResource("1_o8kj8")
+texture = ExtResource("2_e2uq4")
 expand_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
