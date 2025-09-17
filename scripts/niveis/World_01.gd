@@ -16,4 +16,4 @@ func reload_game():
 	#add_child(player)
 	#Globals.player = player
 	#Globals.respaw_player()
-	get_tree().reload_current_scene()
+	get_tree().change_scene_to_file("res://prefabricados/game_over.tscn")
