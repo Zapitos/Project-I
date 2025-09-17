@@ -97,6 +97,7 @@ run={
 2d_physics/layer_1="player"
 2d_physics/layer_2="enemies"
 2d_physics/layer_3="word"
+2d_physics/layer_4="traps"
 2d_physics/layer_5="hitbox"
 2d_physics/layer_6="hurtbox"
 
