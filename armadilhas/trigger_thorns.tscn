@@ -7,7 +7,6 @@
 size = Vector2(8, 193)
 
 [node name="gatilho_espinhos" type="Area2D" node_paths=PackedStringArray("espinhos")]
-collision_layer = 8
 script = ExtResource("1_yq6ua")
 espinhos = NodePath("espinhos")
 
