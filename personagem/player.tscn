@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://fj41x2tpotge" path="res://sprites/novasanims/attack.png" id="2_061al"]
 [ext_resource type="Texture2D" uid="uid://b0g1y72ifokn2" path="res://sprites/novasanims/idle.png" id="2_cpxa8"]
 [ext_resource type="Texture2D" uid="uid://cips32m8gcx84" path="res://sprites/novasanims/jump.png" id="4_arcd1"]
-[ext_resource type="Texture2D" uid="uid://38enqu3m7jje" path="res://sprites/novasanims/walk.png" id="4_wsk0a"]
+[ext_resource type="Texture2D" uid="uid://38enqu3m7jje" path="res://sprites/tileset novo/sprites/novasanims/walk.png" id="4_wsk0a"]
 [ext_resource type="AudioStream" uid="uid://77og4rksdc37" path="res://sons/jump_sfx.wav" id="5_jv6l4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ar424"]
@@ -206,9 +206,8 @@ height = 42.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n5c32"]
 size = Vector2(16.4011, 48.1748)
 
-[node name="Player" type="CharacterBody2D"]
-collision_layer = 0
-collision_mask = 0
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_mask = 14
 script = ExtResource("1_flj5s")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -242,13 +241,12 @@ target_position = Vector2(0, 5)
 collision_mask = 2
 hit_from_inside = true
 
-[node name="hurtbox" type="Area2D" parent="."]
+[node name="hurtbox" type="Area2D" parent="." groups=["player"]]
 position = Vector2(2, -2)
 scale = Vector2(1.77403, 1.06778)
-collision_layer = 0
 collision_mask = 2
 
-[node name="Collision" type="CollisionShape2D" parent="hurtbox"]
+[node name="Collision" type="CollisionShape2D" parent="hurtbox" groups=["player"]]
 position = Vector2(-6.200573, -11.23827)
 shape = SubResource("RectangleShape2D_n5c32")
 debug_color = Color(0.849027, 2.35841e-06, 0.44653, 0.42)
