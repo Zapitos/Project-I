@@ -4,8 +4,8 @@ var is_active = false
 @onready var anim: AnimatedSprite2D = $anim
 
 
-func _on_body_entered(body: Node2D) -> void:
-	if body.name != "player" or is_active:
+func _on_body_entered(_body: Node2D) -> void:
+	if _body.name != "player" or is_active:
 		return
 	activate_checkpoint()
 	

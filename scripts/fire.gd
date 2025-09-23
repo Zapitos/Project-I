@@ -27,7 +27,7 @@ func set_direction(dir):
 	
 
 
-func _on_collision_detection_body_entered(body: Node2D) -> void:
+func _on_collision_detection_body_entered(_body: Node2D) -> void:
 	visible = false
 	var explosion_instance = EXPLOSION.instantiate()
 	get_parent().add_child(explosion_instance)
