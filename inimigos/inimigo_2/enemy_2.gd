@@ -1,15 +1,15 @@
 extends CharacterBody2D
 
 
-const HOVER_SPEED := 70.0
-const BASE_DIVE_SPEED := 360.0
-const AGGRO_RADIUS := 300.0
-const DIVE_PREP_TIME := 1.0
-const DIVE_COOLDOWN := 2.0 # período de recuperação após mergulho antes de voltar a HOVER
-const DIVE_MIN_INTERVAL := 6.0 # intervalo mínimo entre inícios de mergulho (pedido: a cada 6s)
-const DIVE_TOTAL_TIME := 1.05 # duração máxima do mergulho em segundos
-@export var dive_trigger_horizontal: float = 150.0
-@export var dive_trigger_vertical: float = 260.0 # tolerância vertical para permitir iniciar mergulho
+@export var hover_speed: float = 72.0
+@export var base_dive_speed: float = 410.0 # velocidade base do mergulho (agressividade)
+@export var aggro_radius: float = 300.0
+@export var dive_prep_time: float = 0.85
+@export var dive_cooldown: float = 1.8 # recuperação após mergulho
+@export var dive_min_interval: float = 6.0 # intervalo mínimo entre mergulhos completos
+@export var dive_total_time: float = 0.95 # duração alvo do mergulho (ajustar conforme velocidade)
+@export var dive_trigger_horizontal: float = 170.0 # alcance horizontal p/ iniciar mergulho
+@export var dive_trigger_vertical: float = 300.0 # tolerância vertical p/ iniciar mergulho
 @export var show_debug := true
 const DAMAGE := 1
 const BLINK_TIME := 0.15
@@ -49,17 +49,17 @@ func _physics_process(delta: float) -> void:
 	match state:
 		State.HOVER:
 			_hover_logic(delta)
-			if _can_start_dive() and rest_since_last_dive >= DIVE_MIN_INTERVAL:
+			if _can_start_dive() and rest_since_last_dive >= dive_min_interval:
 				_change_state(State.PREPARE_DIVE)
 		State.PREPARE_DIVE:
-			if state_time >= DIVE_PREP_TIME:
+			if state_time >= dive_prep_time:
 				_change_state(State.DIVING)
 		State.DIVING:
 			_dive_logic(delta)
-			if state_time >= DIVE_TOTAL_TIME:
+			if state_time >= dive_total_time:
 				_change_state(State.COOLDOWN)
 		State.COOLDOWN:
-			if state_time >= DIVE_COOLDOWN:
+			if state_time >= dive_cooldown:
 				_change_state(State.HOVER)
 
 	move_and_slide()
@@ -70,7 +70,7 @@ func _hover_logic(_delta):
 	var to_player = (target.global_position - global_position)
 	if abs(to_player.x) > 6:
 		direction = 1 if to_player.x > 0 else -1
-	velocity.x = direction * HOVER_SPEED
+	velocity.x = direction * hover_speed
 	# voo pseudo-natural: mantém altitude alvo com ondulação senoidal
 	var desired_y = target.global_position.y - 110
 	var dy = desired_y - global_position.y
@@ -83,7 +83,7 @@ func _can_start_dive() -> bool:
 		return false
 	var horiz = abs(target.global_position.x - global_position.x)
 	var vert = abs(target.global_position.y - global_position.y)
-	if horiz > AGGRO_RADIUS or vert > dive_trigger_vertical:
+	if horiz > aggro_radius or vert > dive_trigger_vertical:
 		return false
 	return horiz <= dive_trigger_horizontal
 
@@ -100,17 +100,17 @@ func _change_state(new_state: State):
 			dive_dir = Vector2(direction, 0).normalized()
 		state_time = 0.0
 		# velocidade inicial menor (easing acelera no meio)
-		velocity = dive_dir * (BASE_DIVE_SPEED * 0.4)
+		velocity = dive_dir * (base_dive_speed * 0.4)
 	elif state == State.COOLDOWN:
 			velocity = Vector2.ZERO
 			rest_since_last_dive = 0.0 # mergulho acabou: começa a contar os 6s a partir daqui
 
 func _dive_logic(_delta):
 	# Easing: acelera até meio, mantém e desacelera final.
-	var t: float = clamp(state_time / DIVE_TOTAL_TIME, 0.0, 1.0)
+	var t: float = clamp(state_time / dive_total_time, 0.0, 1.0)
 	# curva tipo sino: acelera forte no meio (sinus combinado)
 	var speed_factor := 0.25 + sin(t * PI) # 0.25 a 1.25 aproximadamente
-	velocity = dive_dir * (BASE_DIVE_SPEED * speed_factor)
+	velocity = dive_dir * (base_dive_speed * speed_factor)
 	# Ajusta flip conforme direção horizontal do mergulho
 	if abs(dive_dir.x) > 0.05:
 		texture.flip_h = dive_dir.x < 0
@@ -151,7 +151,7 @@ func _draw():
 	# círculos de debug (apenas overlay translucido)
 	var aggro_col = Color(0.2,0.6,1,0.25)
 	var trig_col = Color(1,0.4,0.2,0.5)
-	draw_circle(Vector2.ZERO, AGGRO_RADIUS, aggro_col)
+	draw_circle(Vector2.ZERO, aggro_radius, aggro_col)
 	draw_circle(Vector2.ZERO, dive_trigger_horizontal, trig_col)
 	# linha direção mergulho
 	if state == State.DIVING and dive_dir != Vector2.ZERO:

@@ -65,6 +65,10 @@ var run_impulse_time_left: float = 0.0
 signal player_has_died()
 
 var knockback_vector := Vector2.ZERO
+@export var invulnerability_time: float = 0.9 # tempo de i-frame após levar dano
+@export var blink_interval: float = 0.12
+var invul_time_left: float = 0.0
+var blink_time_left: float = 0.0
 
 var collision_shapes: Array[CollisionShape2D]
 var current_animation = ""
@@ -93,6 +97,16 @@ func _physics_process(delta: float):
 		if attack_active_left < 0.0:
 			attack_active_left = 0.0
 	# ====== Atualização de timers e estados temporizados ======
+	if invul_time_left > 0.0:
+		invul_time_left -= delta
+		blink_time_left -= delta
+		if blink_time_left <= 0.0:
+			# alterna visibilidade para efeito de flicker
+			animated_sprite.visible = not animated_sprite.visible
+			blink_time_left = blink_interval
+	else:
+		if not animated_sprite.visible:
+			animated_sprite.visible = true
 	if dash_time_left > 0.0:
 		dash_time_left -= delta
 		if dash_time_left <= 0.0:
@@ -325,7 +339,8 @@ func follow_camera(camera):
 
 
 func _on_hurtbox_body_entered(_body: Node2D) -> void:
-
+	if invul_time_left > 0.0:
+		return
 	if $ray_right.is_colliding():
 		take_damage(Vector2(-600,-100))
 	elif $ray_left.is_colliding():
@@ -335,12 +350,17 @@ func _on_hurtbox_body_entered(_body: Node2D) -> void:
 
 
 func take_damage(knockback_force := Vector2.ZERO, duration:= 0.25):
+	if invul_time_left > 0.0:
+		return
 	if Globals.player_life > 1:
 		Globals.player_life -= 1
 	else:
 		queue_free()
 		emit_signal("player_has_died")
 
+	invul_time_left = invulnerability_time
+	blink_time_left = 0.0 # força blink imediato
+	animated_sprite.visible = true
 	if knockback_force != Vector2.ZERO:
 		knockback_vector = knockback_force
 		var knockback_tween := get_tree().create_tween()
