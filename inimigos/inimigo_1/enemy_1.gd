@@ -11,8 +11,8 @@ const BLINK_TIME := 0.15
 @onready var texture := $texture as Sprite2D
 @onready var ledge_detector := $ledge_detector as RayCast2D
 @onready var hurtbox = $hurtbox
-@onready var vision := $vision as Area2D
-@onready var floor_probe := $floor_probe as RayCast2D
+var vision: Area2D
+var floor_probe: RayCast2D
 
 var direction := 1
 var target: Node2D
@@ -28,8 +28,11 @@ func _ready():
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		target = players[0]
-	vision.body_entered.connect(_on_vision_body_entered)
-	vision.body_exited.connect(_on_vision_body_exited)
+	vision = get_node_or_null("vision")
+	floor_probe = get_node_or_null("floor_probe")
+	if vision:
+		vision.body_entered.connect(_on_vision_body_entered)
+		vision.body_exited.connect(_on_vision_body_exited)
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -43,9 +46,12 @@ func _physics_process(delta: float) -> void:
 		if abs(dist_x) > 4:
 			var desired_dir = 1 if dist_x > 0 else -1
 			# Verifica se há chão à frente antes de mudar/andar
-			floor_probe.position.x = 12 * desired_dir
-			floor_probe.force_raycast_update()
-			if floor_probe.is_colliding():
+			if floor_probe:
+				floor_probe.position.x = 12 * desired_dir
+				floor_probe.force_raycast_update()
+				if floor_probe.is_colliding():
+					direction = desired_dir
+			else:
 				direction = desired_dir
 	else:
 		if wall_detector.is_colliding() or not ledge_detector.is_colliding():

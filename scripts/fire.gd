@@ -14,9 +14,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	velocity.x = SPEED * direction * delta
-	
+
 	move_and_collide(velocity)
-	
+
 
 func set_direction(dir):
 	direction = dir
@@ -24,7 +24,7 @@ func set_direction(dir):
 		sprite.flip_h = true
 	else:
 		sprite.flip_h = false
-	
+
 
 
 func _on_collision_detection_body_entered(_body: Node2D) -> void:

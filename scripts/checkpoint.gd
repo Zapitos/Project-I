@@ -8,7 +8,7 @@ func _on_body_entered(_body: Node2D) -> void:
 	if _body.name != "player" or is_active:
 		return
 	activate_checkpoint()
-	
+
 func activate_checkpoint():
 	#Globals.current_checkpoint = self
 	anim.play("raising")
