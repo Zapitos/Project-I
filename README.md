@@ -64,14 +64,3 @@ Dica: Se o editor carregar referências antigas, vá em Project → Reload Curre
  <img src="https://contrib.rocks/image?repo=Zapitos/Project-I" alt="Contribuidores" />
 </a>
 <!-- markdownlint-enable MD033 -->
-
-Obrigado a todas as pessoas que já contribuíram! (A imagem acima é gerada dinamicamente pelo serviço público contrib.rocks.)
-
-### Guia rápido para contribuir
-
-1. Faça um fork ou crie uma branch.
-2. Commits pequenos e mensagens em pt-BR de preferência.
-3. Abra um Pull Request descrevendo claramente a mudança.
-
-Se quiser futuramente manter papéis/funções detalhados, pode-se criar manualmente uma tabela abaixo ou adicionar outra seção; por enquanto usamos apenas o grid de avatares.
-
