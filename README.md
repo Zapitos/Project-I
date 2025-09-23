@@ -59,22 +59,19 @@ Dica: Se o editor carregar referências antigas, vá em Project → Reload Curre
 
 ## Colaboradores
 
-Esta seção é gerada automaticamente pelo workflow `update_contributors`. Edite manualmente SOMENTE se for para ajustar descrições entre colchetes. Para mudar papéis, use o arquivo opcional `tools/contributors_overrides.json`.
+<!-- markdownlint-disable MD033 -->
+<a href="https://github.com/Zapitos/Project-I/graphs/contributors">
+ <img src="https://contrib.rocks/image?repo=Zapitos/Project-I" alt="Contribuidores" />
+</a>
+<!-- markdownlint-enable MD033 -->
 
-<!-- CONTRIBUTORS-LIST:START -->
-| Nome / Handle | Função / Foco | Commits |
-|---------------|---------------|---------|
-| Zapitos | Criador / Dev Principal | (inicial) |
-<!-- CONTRIBUTORS-LIST:END -->
+Obrigado a todas as pessoas que já contribuíram! (A imagem acima é gerada dinamicamente pelo serviço público contrib.rocks.)
 
-### Como adicionar um novo colaborador
+### Guia rápido para contribuir
 
-1. (Opcional) Para ajustar descrição de alguém, adicione/edite `tools/contributors_overrides.json`.
-2. Rode localmente: `python tools/update_contributors.py` (ou espere o workflow agendado).
-3. Commit: `docs: atualiza colaboradores`.
-4. Abra Pull Request se não for push direto.
+1. Faça um fork ou crie uma branch.
+2. Commits pequenos e mensagens em pt-BR de preferência.
+3. Abra um Pull Request descrevendo claramente a mudança.
 
-### Automatização opcional (futuro)
-
-Pode-se criar um script que consome a API do GitHub para gerar esta lista automaticamente (ex.: `scripts/update_contributors.gd` ou workflow GitHub Actions) — não implementado ainda para manter o repositório simples.
+Se quiser manter um papel/função por pessoa de forma manual, ainda é possível usar o script em `tools/update_contributors.py` para gerar uma tabela alternativa — mas por padrão adotamos agora apenas o grid de avatares.
 
