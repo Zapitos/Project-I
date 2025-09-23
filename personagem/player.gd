@@ -54,8 +54,29 @@ var knockback_vector := Vector2.ZERO
 var collision_shapes: Array[CollisionShape2D]
 var current_animation = ""
 
+# ================= COMBATE =================
+@export var attack_cooldown: float = 0.4
+@export var attack_active_time: float = 0.15
+@export var attack_range: float = 40.0
+var attack_cooldown_left: float = 0.0
+var attack_active_left: float = 0.0
+var _attack_hit_enemies := {}
+
+func _ready():
+	add_to_group("player")
+
+
 
 func _physics_process(delta: float):
+	# ====== Timers de ataque ======
+	if attack_cooldown_left > 0.0:
+		attack_cooldown_left -= delta
+	if attack_active_left > 0.0:
+		attack_active_left -= delta
+		_process_attack_hits()
+	else:
+		if attack_active_left < 0.0:
+			attack_active_left = 0.0
 	# ====== Atualização de timers e estados temporizados ======
 	if dash_time_left > 0.0:
 		dash_time_left -= delta
@@ -237,8 +258,40 @@ var hearts_list : Array[TextureRect]
 var health = 5
 
 func attack():
+	if attack_cooldown_left > 0.0:
+		return
+	attack_cooldown_left = attack_cooldown
+	attack_active_left = attack_active_time
+	_attack_hit_enemies.clear()
 	animated_sprite.play("attack")
 	animation_locked = true
+	# Ajusta flip da sprite para determinar direção
+	var dir := 1 if not animated_sprite.flip_h else -1
+	# Pré-checa hits no primeiro frame do ataque
+	_process_attack_hits(dir)
+
+func _process_attack_hits(dir := 1):
+	# Cria uma área de ataque simples (retângulo) na frente do player
+	var space := get_world_2d().direct_space_state
+	var box_from := global_position + Vector2(dir * attack_range * 0.5, 0)
+	var rect_size := Vector2(attack_range, 30)
+	var aabb := Rect2(box_from - rect_size * 0.5, rect_size)
+	var params := PhysicsShapeQueryParameters2D.new()
+	params.collision_mask = 0xFFFFFFFF
+	# Usamos um shape retangular
+	var shape := RectangleShape2D.new()
+	shape.size = rect_size
+	params.shape = shape
+	params.transform = Transform2D(0, aabb.position + aabb.size * 0.5)
+	var results := space.intersect_shape(params, 8)
+	for r in results:
+		var collider: Object = r.get("collider")
+		if collider == self:
+			continue
+		if collider and collider.is_in_group("enemy") and not _attack_hit_enemies.has(collider):
+			_attack_hit_enemies[collider] = true
+			if collider.has_method("take_damage"):
+				collider.take_damage(1, dir)
 
 func _on_animation_changed():
 	current_animation = animated_sprite.animation
