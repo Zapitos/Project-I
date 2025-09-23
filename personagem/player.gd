@@ -271,3 +271,4 @@ func take_damage(knockback_force := Vector2.ZERO, duration:= 0.25):
 		knockback_tween.tween_property(self, "knockback_vector", Vector2.ZERO, duration)
 		animated_sprite.modulate = Color(1, 0, 0, 1)
 		knockback_tween.tween_property(animated_sprite, "modulate", Color(1, 1, 1, 1), duration)
+
