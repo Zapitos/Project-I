@@ -10,7 +10,9 @@ const BLINK_TIME := 0.15
 @onready var wall_detector := $wall_detector as RayCast2D
 @onready var texture := $texture as Sprite2D
 @onready var ledge_detector := $ledge_detector as RayCast2D
-@onready var hurtbox = $hurtbox  # Assuming the hurtbox is an Area2D node
+@onready var hurtbox = $hurtbox
+@onready var vision := $vision as Area2D
+@onready var floor_probe := $floor_probe as RayCast2D
 
 var direction := 1
 var target: Node2D
@@ -26,6 +28,8 @@ func _ready():
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		target = players[0]
+	vision.body_entered.connect(_on_vision_body_entered)
+	vision.body_exited.connect(_on_vision_body_exited)
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -34,16 +38,21 @@ func _physics_process(delta: float) -> void:
 	if attack_cooldown_left > 0.0:
 		attack_cooldown_left -= delta
 
-	if target:
+	if target and _player_in_sight:
 		var dist_x = target.global_position.x - global_position.x
 		if abs(dist_x) > 4:
-			direction = 1 if dist_x > 0 else -1
+			var desired_dir = 1 if dist_x > 0 else -1
+			# Verifica se há chão à frente antes de mudar/andar
+			floor_probe.position.x = 12 * desired_dir
+			floor_probe.force_raycast_update()
+			if floor_probe.is_colliding():
+				direction = desired_dir
 	else:
 		if wall_detector.is_colliding() or not ledge_detector.is_colliding():
 			direction *= -1
 			wall_detector.scale.x *= -1
 			ledge_detector.scale.x *= -1
-		
+
 	if direction == 1:
 		texture.flip_h = false
 	else:
@@ -80,9 +89,17 @@ func _blink_feedback():
 	tween.finished.connect(func(): blinking = false)
 
 func _can_attack_target() -> bool:
-	if not target or attack_cooldown_left > 0.0:
+	if not target or attack_cooldown_left > 0.0 or not _player_in_sight:
 		return false
 	return abs(target.global_position.x - global_position.x) <= ATTACK_RANGE and abs(target.global_position.y - global_position.y) < 40
+
+var _player_in_sight := false
+func _on_vision_body_entered(body):
+	if body.is_in_group("player"):
+		_player_in_sight = true
+func _on_vision_body_exited(body):
+	if body.is_in_group("player"):
+		_player_in_sight = false
 
 func _perform_attack():
 	attack_cooldown_left = ATTACK_COOLDOWN

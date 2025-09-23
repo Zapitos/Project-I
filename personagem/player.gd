@@ -1,5 +1,20 @@
 class_name player extends CharacterBody2D
 
+# Indicador visual simples para mostrar o alcance do ataque
+class AttackIndicator:
+	extends Node2D
+	var size: Vector2
+	var lifetime: float
+	var elapsed: float = 0.0
+	var color: Color = Color(1,1,1,0.55)
+	func _process(delta: float) -> void:
+		elapsed += delta
+		if elapsed >= lifetime:
+			queue_free()
+		self.queue_redraw()
+	func _draw():
+		draw_rect(Rect2(-size * 0.5, size), color, false, 2.0)
+
 @export var speed : float = 200.0
 @export var jump_velocity : float = -250.0
 @export var double_jump_velocity : float = -200
@@ -55,9 +70,9 @@ var collision_shapes: Array[CollisionShape2D]
 var current_animation = ""
 
 # ================= COMBATE =================
-@export var attack_cooldown: float = 0.4
-@export var attack_active_time: float = 0.15
-@export var attack_range: float = 40.0
+@export var attack_cooldown: float = 0.45
+@export var attack_active_time: float = 0.18
+@export var attack_range: float = 60.0 # alcance aumentado
 var attack_cooldown_left: float = 0.0
 var attack_active_left: float = 0.0
 var _attack_hit_enemies := {}
@@ -269,6 +284,7 @@ func attack():
 	var dir := 1 if not animated_sprite.flip_h else -1
 	# Pré-checa hits no primeiro frame do ataque
 	_process_attack_hits(dir)
+	_spawn_attack_indicator(dir)
 
 func _process_attack_hits(dir := 1):
 	# Cria uma área de ataque simples (retângulo) na frente do player
@@ -292,6 +308,13 @@ func _process_attack_hits(dir := 1):
 			_attack_hit_enemies[collider] = true
 			if collider.has_method("take_damage"):
 				collider.take_damage(1, dir)
+
+func _spawn_attack_indicator(dir: int):
+	var ind := AttackIndicator.new()
+	ind.size = Vector2(attack_range, 34)
+	ind.lifetime = attack_active_time
+	ind.position = Vector2(dir * attack_range * 0.5, 0)
+	add_child(ind)
 
 func _on_animation_changed():
 	current_animation = animated_sprite.animation

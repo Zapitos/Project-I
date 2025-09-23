@@ -1,15 +1,16 @@
 extends CharacterBody2D
 
 
-const HOVER_SPEED := 60.0
-const DIVE_SPEED := 380.0
-const AGGRO_RADIUS := 280.0
-const DIVE_PREP_TIME := 0.6
-const DIVE_COOLDOWN := 1.4
+const HOVER_SPEED := 70.0
+const DIVE_SPEED := 320.0
+const AGGRO_RADIUS := 300.0
+const DIVE_PREP_TIME := 1.0
+const DIVE_COOLDOWN := 2.0
 const DAMAGE := 1
 const BLINK_TIME := 0.15
 
 @onready var texture := $texture as Sprite2D
+@onready var vision := $vision as Area2D
 
 enum State { HOVER, PREPARE_DIVE, DIVING, COOLDOWN }
 var state: State = State.HOVER
@@ -19,11 +20,15 @@ var health := 3
 var blinking := false
 var direction := 1
 
+var _player_in_sight := false
+
 func _ready():
 	add_to_group("enemy")
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		target = players[0]
+	vision.body_entered.connect(_on_vision_body_entered)
+	vision.body_exited.connect(_on_vision_body_exited)
 
 func _physics_process(delta: float) -> void:
 	state_time += delta
@@ -52,14 +57,15 @@ func _hover_logic(_delta):
 	if abs(to_player.x) > 6:
 		direction = 1 if to_player.x > 0 else -1
 	velocity.x = direction * HOVER_SPEED
-	# ajusta altitude aproximada
-	var desired_y = target.global_position.y - 90
+	# voo pseudo-natural: mantém altitude alvo com ondulação senoidal
+	var desired_y = target.global_position.y - 110
 	var dy = desired_y - global_position.y
-	velocity.y = clamp(dy * 2, -80, 80)
+	var sinus := sin(Time.get_ticks_msec()/400.0) * 25
+	velocity.y = clamp(dy * 1.4 + sinus, -120, 120)
 	texture.flip_h = direction < 0
 
 func _can_start_dive() -> bool:
-	if not target:
+	if not target or not _player_in_sight:
 		return false
 	return global_position.distance_to(target.global_position) <= AGGRO_RADIUS
 
@@ -83,6 +89,13 @@ func _dive_logic(_delta):
 			var dir = 1 if target.global_position.x > global_position.x else -1
 			target.take_damage(Vector2(dir*450,-150))
 			_change_state(State.COOLDOWN)
+
+func _on_vision_body_entered(body):
+	if body.is_in_group("player"):
+		_player_in_sight = true
+func _on_vision_body_exited(body):
+	if body.is_in_group("player"):
+		_player_in_sight = false
 
 func take_damage(amount := 1, _from_dir := 1):
 	if blinking:
