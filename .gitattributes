@@ -1,0 +1,43 @@
+* text=auto eol=lf
+
+# Godot text assets
+*.gd text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.import text eol=lf
+*.shader text eol=lf
+*.md text eol=lf
+*.cfg text eol=lf
+
+# Windows scripts
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.wav binary
+*.ogg binary
+*.mp3 binary
+*.ttf binary
+*.otf binary
+* text=auto eol=lf
+
+# Tratar arquivos Godot como texto
+*.gd text
+*.tscn text
+*.tres text
+*.import text
+
+# Binários/imagens
+*.png binary
+*.ogg binary
+*.wav binary
+*.wav.bytes binary
+*.svg text
+
+# Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
