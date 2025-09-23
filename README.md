@@ -73,5 +73,5 @@ Obrigado a todas as pessoas que já contribuíram! (A imagem acima é gerada din
 2. Commits pequenos e mensagens em pt-BR de preferência.
 3. Abra um Pull Request descrevendo claramente a mudança.
 
-Se quiser manter um papel/função por pessoa de forma manual, ainda é possível usar o script em `tools/update_contributors.py` para gerar uma tabela alternativa — mas por padrão adotamos agora apenas o grid de avatares.
+Se quiser futuramente manter papéis/funções detalhados, pode-se criar manualmente uma tabela abaixo ou adicionar outra seção; por enquanto usamos apenas o grid de avatares.
 
