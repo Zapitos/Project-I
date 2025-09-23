@@ -21,7 +21,8 @@ const ACTION_JUMP := "jump"
 const ACTION_ATTACK := "attack"
 const ACTION_RUN := "run"
 
-var wall_jumps_left : int = 2 # Variável para controlar os pulos na parede
+var wall_jumps_left : int = 2 # Pulos restantes na parede atual
+var last_wall_side : int = 0 # 1 = parede à esquerda, -1 = parede à direita, 0 = nenhuma
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -103,11 +104,28 @@ func _physics_process(delta: float):
 		if is_on_floor():
 			jump()
 			wall_jumps_left = 2
-		elif on_wall and wall_jumps_left > 0:
-			var push_dir := (touching_left) ? 1 : (touching_right ? -1 : (input_x < 0 ? 1 : -1))
-			wall_jump(push_dir)
-			_suppress_horizontal_this_frame = true
-			wall_jumps_left -= 1
+			last_wall_side = 0
+		elif on_wall:
+			# Determina qual lado da parede está tocando agora
+			var current_wall_side := 0
+			if touching_left:
+				current_wall_side = 1
+			elif touching_right:
+				current_wall_side = -1
+			# Se mudou de lado, reseta a quantidade de wall jumps disponíveis para este lado
+			if current_wall_side != 0 and current_wall_side != last_wall_side:
+				wall_jumps_left = 2
+			if wall_jumps_left > 0:
+				# Determina direção de empurrão (sempre oposta à parede atual)
+				var push_dir := 1
+				if current_wall_side == 1: # parede à esquerda -> empurra para direita
+					push_dir = 1
+				elif current_wall_side == -1: # parede à direita -> empurra para esquerda
+					push_dir = -1
+				wall_jump(push_dir)
+				_suppress_horizontal_this_frame = true
+				wall_jumps_left -= 1
+				last_wall_side = current_wall_side
 		elif not has_double_jumped:
 			double_jump()
 
@@ -201,7 +219,7 @@ func wall_jump(push_dir: int) -> void:
 #func land():
 	#animated_sprite.play("jump_end")
 	#animation_locked = true
-	
+
 func dash():
 	can_dash = false
 	is_dashing = true
@@ -253,4 +271,3 @@ func take_damage(knockback_force := Vector2.ZERO, duration:= 0.25):
 		knockback_tween.tween_property(self, "knockback_vector", Vector2.ZERO, duration)
 		animated_sprite.modulate = Color(1, 0, 0, 1)
 		knockback_tween.tween_property(animated_sprite, "modulate", Color(1, 1, 1, 1), duration)
-
