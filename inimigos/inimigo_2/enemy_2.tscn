@@ -1,0 +1,151 @@
+[gd_scene load_steps=8 format=3 uid="uid://c6vl4ma8l3rv3"]
+
+[ext_resource type="Texture2D" uid="uid://dfsd7y1u6nwvn" path="res://sprites/enemy 2.png" id="1_f7l8a"]
+[ext_resource type="Script" uid="uid://bem7w566smcki" path="res://inimigos/inimigo_2/enemy_2.gd" id="1_u3oph"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u3oph"]
+
+[sub_resource type="Animation" id="Animation_vkf05"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("texture:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("1_f7l8a")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("texture:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("texture:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("texture:vframes")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_k6wto"]
+resource_name = "fly"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("texture:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("1_f7l8a")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("texture:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("texture:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("texture:vframes")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.0333333),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8i8ls"]
+_data = {
+&"RESET": SubResource("Animation_vkf05"),
+&"fly": SubResource("Animation_k6wto")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k6wto"]
+radius = 32.6956
+
+[node name="enemy 2" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource("1_u3oph")
+
+[node name="collision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_u3oph")
+
+[node name="texture" type="Sprite2D" parent="."]
+position = Vector2(-1, 5.96046e-08)
+scale = Vector2(0.770833, 0.802083)
+texture = ExtResource("1_f7l8a")
+hframes = 3
+
+[node name="animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_8i8ls")
+}
+autoplay = "fly"
+
+[node name="platform_detector" type="RayCast2D" parent="."]
+position = Vector2(8, 0)
+target_position = Vector2(0, 169)
+
+[node name="player_detector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player_detector"]
+shape = SubResource("CircleShape2D_k6wto")
+
+[node name="wall_detector" type="RayCast2D" parent="."]
+target_position = Vector2(13, 0)
+collision_mask = 4

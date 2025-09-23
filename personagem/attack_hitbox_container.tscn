@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://bho83iyp1dh4w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wsq0s"]
+size = Vector2(6, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n0mu4"]
+size = Vector2(7, 23)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kkdp4"]
+size = Vector2(13.0918, 25.5351)
+
+[node name="attack_hitbox_container" type="CharacterBody2D"]
+position = Vector2(6, 0)
+
+[node name="attack_hitbox1" type="CollisionShape2D" parent="."]
+position = Vector2(1, 0)
+rotation = -0.568219
+shape = SubResource("RectangleShape2D_wsq0s")
+
+[node name="attack_hitbox2" type="CollisionShape2D" parent="."]
+position = Vector2(12.5, 10.5)
+shape = SubResource("RectangleShape2D_n0mu4")
+
+[node name="attack_hitbox0" type="CollisionShape2D" parent="."]
+position = Vector2(16, 26)
+rotation = 0.316447
+shape = SubResource("RectangleShape2D_kkdp4")

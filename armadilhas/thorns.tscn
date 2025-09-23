@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://cn6w6clcuwfef"]
+
+[ext_resource type="Script" uid="uid://m0skq0pq4yg2" path="res://traps/thorns.gd" id="1_e34bd"]
+[ext_resource type="Texture2D" uid="uid://ba2u5kam4s8pk" path="res://sprites/spike.png" id="1_hj41n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yal0q"]
+size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e34bd"]
+size = Vector2(48, 193)
+
+[node name="espinhos" type="CharacterBody2D"]
+script = ExtResource("1_e34bd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 3.14159
+texture = ExtResource("1_hj41n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_yal0q")
+
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
+position = Vector2(0, 121)
+shape = SubResource("RectangleShape2D_e34bd")
+
+[connection signal="body_entered" from="hitbox" to="." method="_on_espinhos_body_entered"]

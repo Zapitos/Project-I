@@ -1,0 +1,70 @@
+[gd_scene load_steps=11 format=3 uid="uid://b5uqrlqxdlpks"]
+
+[ext_resource type="Script" uid="uid://coyjc31nb53o4" path="res://Coletaveis/scripts/coin.gd" id="1_bvhdu"]
+[ext_resource type="Texture2D" uid="uid://6upj2iup3bl7" path="res://sprites/MonedaD.png" id="2_8jnu3"]
+[ext_resource type="AudioStream" uid="uid://x0gud5i61e55" path="res://sons/coin_sfx.wav" id="3_8jnu3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ubkr"]
+atlas = ExtResource("2_8jnu3")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1w55"]
+atlas = ExtResource("2_8jnu3")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lyy0i"]
+atlas = ExtResource("2_8jnu3")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q3gbx"]
+atlas = ExtResource("2_8jnu3")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3mu4b"]
+atlas = ExtResource("2_8jnu3")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1htjr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ubkr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1w55")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lyy0i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q3gbx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3mu4b")
+}],
+"loop": true,
+"name": &"spin",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7imng"]
+radius = 7.0
+height = 16.0
+
+[node name="coin" type="Node2D"]
+script = ExtResource("1_bvhdu")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_1htjr")
+animation = &"spin"
+autoplay = "spin"
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CapsuleShape2D_7imng")
+
+[node name="coin_sfx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_8jnu3")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
