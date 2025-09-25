@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="projeto icaro"
+config/name="101% ATUALIZADO"
 run/main_scene="uid://ejes7yxh6hiq"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"

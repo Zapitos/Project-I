@@ -325,7 +325,7 @@ func _process_attack_hits(dir := 1):
 
 func _spawn_attack_indicator(dir: int):
 	var ind := AttackIndicator.new()
-	ind.size = Vector2(attack_range, 34)
+	ind.size = Vector2(attack_range, 64)
 	ind.lifetime = attack_active_time
 	ind.position = Vector2(dir * attack_range * 0.5, 0)
 	add_child(ind)
@@ -367,4 +367,3 @@ func take_damage(knockback_force := Vector2.ZERO, duration:= 0.25):
 		knockback_tween.tween_property(self, "knockback_vector", Vector2.ZERO, duration)
 		animated_sprite.modulate = Color(1, 0, 0, 1)
 		knockback_tween.tween_property(animated_sprite, "modulate", Color(1, 1, 1, 1), duration)
-

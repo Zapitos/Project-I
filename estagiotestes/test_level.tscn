@@ -541,7 +541,7 @@ scale = Vector2(10.452809, 10.02214)
 [node name="bg_music" type="AudioStreamPlayer" parent="."]
 
 [node name="player" parent="." instance=ExtResource("2_1jb2b")]
-position = Vector2(-3268, 37)
+position = Vector2(2010, 556)
 collision_layer = 1
 collision_mask = 6
 
@@ -606,7 +606,7 @@ offset_bottom = 0.0
 size_flags_vertical = 0
 
 [node name="mino" parent="." instance=ExtResource("18_3ro43")]
-position = Vector2(2799, 756)
+position = Vector2(2853, 731)
 
 [node name="pause_menu" parent="." instance=ExtResource("19_d7c7v")]
 

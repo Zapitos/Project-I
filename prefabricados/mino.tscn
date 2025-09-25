@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqcb7iuil745v"]
+[gd_scene load_steps=24 format=3 uid="uid://cqcb7iuil745v"]
 
 [ext_resource type="Script" uid="uid://cthxvduq7j1nr" path="res://scripts/mino.gd" id="1_1cgx4"]
 [ext_resource type="Texture2D" uid="uid://cfkb8jd4lwpug" path="res://sprites/boss_sprites/IDLE.png" id="1_k55io"]
+[ext_resource type="Texture2D" uid="uid://mqguwjyeehuc" path="res://sprites/boss_sprites/boss_attack.png" id="3_nk08q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k55io"]
 size = Vector2(35, 36)
@@ -11,7 +12,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("textura:frame")
+tracks/0/path = NodePath("sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -20,15 +21,26 @@ tracks/0/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [7]
+}
 
-[sub_resource type="Animation" id="Animation_k55io"]
-resource_name = "moving"
+[sub_resource type="Animation" id="Animation_doskc"]
+resource_name = "enter_scene"
 length = 0.8
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("textura:frame")
+tracks/0/path = NodePath("sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -38,11 +50,118 @@ tracks/0/keys = {
 "values": [0, 1, 2, 3]
 }
 
+[sub_resource type="Animation" id="Animation_55pta"]
+resource_name = "fire_attack"
+length = 0.45
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.29649553),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [7, 6, 3]
+}
+
+[sub_resource type="Animation" id="Animation_8efp8"]
+resource_name = "hide_bespinhos"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_k55io"]
+resource_name = "moving"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nk08q"]
 _data = {
 &"RESET": SubResource("Animation_1cgx4"),
+&"enter_scene": SubResource("Animation_doskc"),
+&"fire_attack": SubResource("Animation_55pta"),
+&"hide_bespinhos": SubResource("Animation_8efp8"),
 &"moving": SubResource("Animation_k55io")
 }
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wfibg"]
+animation = &"enter_scene"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_giiv0"]
+animation = &"fire_attack"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_b6u6k"]
+animation = &"hide_bespinhos"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_oirlb"]
+animation = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y1dbw"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y50te"]
+advance_mode = 2
+advance_condition = &"can_move"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i2a40"]
+advance_mode = 2
+advance_condition = &"time_fire"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ax8p1"]
+advance_mode = 2
+advance_condition = &"can_move"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y1nba"]
+advance_mode = 2
+advance_condition = &"time_bespinhos"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uxxdh"]
+advance_mode = 2
+advance_condition = &"can_move"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_n1q2o"]
+states/Start/position = Vector2(228, 100)
+states/enter_scene/node = SubResource("AnimationNodeAnimation_wfibg")
+states/enter_scene/position = Vector2(364, 100)
+states/fire_attack/node = SubResource("AnimationNodeAnimation_giiv0")
+states/fire_attack/position = Vector2(675, 35)
+states/hide_bespinhos/node = SubResource("AnimationNodeAnimation_b6u6k")
+states/hide_bespinhos/position = Vector2(693, 156)
+states/moving/node = SubResource("AnimationNodeAnimation_oirlb")
+states/moving/position = Vector2(530, 100)
+transitions = ["Start", "enter_scene", SubResource("AnimationNodeStateMachineTransition_y1dbw"), "enter_scene", "moving", SubResource("AnimationNodeStateMachineTransition_y50te"), "moving", "fire_attack", SubResource("AnimationNodeStateMachineTransition_i2a40"), "fire_attack", "moving", SubResource("AnimationNodeStateMachineTransition_ax8p1"), "fire_attack", "hide_bespinhos", SubResource("AnimationNodeStateMachineTransition_y1nba"), "hide_bespinhos", "moving", SubResource("AnimationNodeStateMachineTransition_uxxdh")]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nk08q"]
+size = Vector2(54.349148, 30.388758)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_doskc"]
+size = Vector2(327.27167, 53.764713)
 
 [node name="mino" type="CharacterBody2D"]
 scale = Vector2(1.71116, 1.71116)
@@ -51,35 +170,39 @@ collision_mask = 5
 script = ExtResource("1_1cgx4")
 
 [node name="collision" type="CollisionShape2D" parent="."]
-position = Vector2(-8, 8)
-scale = Vector2(0.804878, 0.90625)
+position = Vector2(-7.9999995, 7.9999995)
+scale = Vector2(0.80487794, 0.90624994)
 shape = SubResource("RectangleShape2D_k55io")
 
-[node name="textura" type="Sprite2D" parent="."]
+[node name="sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_k55io")
 hframes = 4
 
-[node name="fire_point" type="Marker2D" parent="textura"]
+[node name="fire_point" type="Marker2D" parent="sprite"]
 unique_name_in_owner = true
 position = Vector2(-8, 10)
 
-[node name="Bespinhos_point" type="Marker2D" parent="textura"]
+[node name="bespinhos_point" type="Marker2D" parent="sprite"]
 unique_name_in_owner = true
-position = Vector2(-11, 22)
+position = Vector2(-4.0907927, 8.765985)
 
 [node name="anim_player" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_nk08q")
 }
-autoplay = "moving"
 
 [node name="anim_tree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_n1q2o")
+anim_player = NodePath("../anim_player")
+parameters/conditions/can_move = false
+parameters/conditions/time_bespinhos = false
+parameters/conditions/time_fire = false
 
-[node name="bomb_cooldown" type="Timer" parent="."]
+[node name="bespinhos_cooldown" type="Timer" parent="."]
 wait_time = 2.0
-autostart = true
 
 [node name="fire_cooldown" type="Timer" parent="."]
+wait_time = 2.5
 
 [node name="wall_detector" type="RayCast2D" parent="."]
 position = Vector2(-12.8568, 9.93478)
@@ -87,4 +210,28 @@ scale = Vector2(1.93654, 2.80426)
 target_position = Vector2(-16, 0)
 collision_mask = 4
 
-[connection signal="timeout" from="bomb_cooldown" to="." method="_on_bomb_cooldown_timeout"]
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_nk08q")
+hframes = 8
+frame = 7
+
+[node name="hurtbox" type="Area2D" parent="."]
+
+[node name="collision" type="CollisionShape2D" parent="hurtbox"]
+position = Vector2(-10.22698, 4.0907903)
+scale = Vector2(0.9999989, 0.9999989)
+shape = SubResource("RectangleShape2D_nk08q")
+
+[node name="player_detector" type="Area2D" parent="."]
+
+[node name="collision" type="CollisionShape2D" parent="player_detector"]
+position = Vector2(-48.501045, 1.7531953)
+scale = Vector2(0.99999934, 0.99999934)
+shape = SubResource("RectangleShape2D_doskc")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+
+[connection signal="timeout" from="bespinhos_cooldown" to="." method="_on_bespinhos_cooldown_timeout"]
+[connection signal="timeout" from="fire_cooldown" to="." method="_on_fire_cooldown_timeout"]
+[connection signal="body_entered" from="player_detector" to="." method="_on_player_detector_body_entered"]
+[connection signal="screen_entered" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_entered"]

@@ -17,7 +17,7 @@ var floor_probe: RayCast2D
 var direction := 1
 var target: Node2D
 var attack_cooldown_left := 0.0
-var health := 3
+var health := 2
 var blinking := false
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 

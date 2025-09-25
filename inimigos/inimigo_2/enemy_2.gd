@@ -26,7 +26,7 @@ var target: Node2D
 var state_time := 0.0
 var rest_since_last_dive := 6.0 # começa liberado para mergulhar cedo (>=6)
 var dive_dir := Vector2.ZERO
-var health := 3
+var health := 2
 var blinking := false
 var direction := 1
 var lost_sight_time := 0.0
